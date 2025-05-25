@@ -4,7 +4,7 @@
 class Player {
 public:
     sf::RectangleShape shape;
-    float speed = 100.f;
+    float speed = 1.f;
     float jumpForce;
     bool onGround;
     float velocityY;
