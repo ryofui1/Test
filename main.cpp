@@ -5,7 +5,7 @@
 
 int main() {
     defValues();
-    std::cout << "HelloWorld!" << std::endl;
+    std::cout << "HelloWorld!!!!!!!!!!!!" << std::endl;
 
     sf::RenderWindow window(sf::VideoMode(800, 600), "Mario-like Action Game");
 
