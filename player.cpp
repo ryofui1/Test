@@ -5,7 +5,6 @@ Player::Player() {
     shape.setSize(sf::Vector2f(50.f, 50.f));
     shape.setFillColor(sf::Color::Green);
     shape.setPosition(100.f, 300.f);
-    jumpForce = -0.4;
     onGround = false;
     velocityY = 0.f;
 }
