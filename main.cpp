@@ -5,9 +5,10 @@
 
 int main() {
     defValues();
-    std::cout << "HelloWorld!!!!!!!!!" << std::endl;
+    std::cout << "HelloWorld!" << std::endl;
+    std::cout << "tybob" << std::endl;
 
-    sf::RenderWindow window(sf::VideoMode(800, 600), "Mario-like Action Game");
+    sf::RenderWindow window(sf::VideoMode(800, 600), "Action Game");
 
     Player player;
     float groundY = 550.f;
