@@ -2,22 +2,30 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include "Player.hpp"
+#include "Operation.hpp"
+#include "Draw.hpp"
+void defValue() {
+    ground.setSize(sf::Vector2f(ScreenWidth, ScreenHeight-groundY));
+    ground.setFillColor(sf::Color::Green);
+    ground.setPosition(0.f, groundY);
+}
+
+sf::Clock myClock;
+sf::RenderWindow window(sf::VideoMode(ScreenWidth, ScreenHeight), "TestGame");
+Player player;
+sf::RectangleShape ground;
 
 int main() {
-    defValues();
     std::cout << "HelloWorld!" << std::endl;
     std::cout << "tybob" << std::endl;
 
-    sf::RenderWindow window(sf::VideoMode(800, 600), "Action Game");
-
-    Player player;
-    float groundY = 550.f;
-
+    std::cout << ScreenWidth << std:: endl;
     
-    sf::Clock clock;
+    defValue();
+
     while (window.isOpen()) {
-        sf::Time deltaTime = clock.restart();
-        window.clear(sf::Color::Cyan);
+        //処理時間 deltatime
+        sf::Time deltaTime = myClock.restart();
 
         sf::Event event;
         while (window.pollEvent(event)) {
@@ -25,16 +33,9 @@ int main() {
                 window.close();
         }
 
-        player.move(deltaTime.asSeconds() * 10);
-        player.checkCollisionWithGround(groundY);
+        Operation(deltaTime);
 
-        sf::RectangleShape ground(sf::Vector2f(800.f, 50.f));
-        ground.setFillColor(sf::Color::Green);
-        ground.setPosition(0.f, groundY);
-
-        window.draw(ground);
-        window.draw(player.shape);
-        window.display();
+        Draw(deltaTime);
     }
 
     return 0;
