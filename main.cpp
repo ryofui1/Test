@@ -17,7 +17,7 @@ sf::RectangleShape ground;
 
 int main() {
     std::cout << "HelloWorld!" << std::endl;
-    std::cout << "tybob" << std::endl;
+    std::cout << "tybob8010&ryofui1" << std::endl;
 
     std::cout << ScreenWidth << std:: endl;
     
