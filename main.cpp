@@ -4,6 +4,9 @@
 #include "Player.hpp"
 #include "Operation.hpp"
 #include "Draw.hpp"
+#include "Enemy.hpp"
+#include <list>
+
 void defValue() {
     ground.setSize(sf::Vector2f(ScreenWidth, ScreenHeight-groundY));
     ground.setFillColor(sf::Color::Green);
@@ -14,6 +17,7 @@ sf::Clock myClock;
 sf::RenderWindow window(sf::VideoMode(ScreenWidth, ScreenHeight), "TestGame");
 Player player;
 sf::RectangleShape ground;
+std::list<Enemy> enemyList = {Enemy(0)};
 
 int main() {
     std::cout << "HelloWorld!" << std::endl;
