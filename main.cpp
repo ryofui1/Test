@@ -17,7 +17,7 @@ sf::Clock myClock;
 sf::RenderWindow window(sf::VideoMode(ScreenWidth, ScreenHeight), "TestGame");
 Player player;
 sf::RectangleShape ground;
-std::list<Enemy> enemyList = {Enemy(0), Enemy(0)};
+std::list<Enemy> enemyList = {Enemy(0), Enemy(0),Enemy(0), Enemy(0),};
 
 int main() {
     std::cout << "HelloWorld!" << std::endl;
@@ -30,6 +30,9 @@ int main() {
     while (window.isOpen()) {
         //処理時間 deltatime
         sf::Time deltaTime = myClock.restart();
+
+        //Debug用
+        collisionLines.clear();
 
         sf::Event event;
         while (window.pollEvent(event)) {

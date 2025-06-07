@@ -31,7 +31,7 @@ void Player::move(float deltaTime) {
     } else{
         velocityY = 0.f;
     }
-   
+
     if (velocityX < -velocityDamping) {
         velocityX += velocityDamping * deltaTime;
     } else if (velocityX > velocityDamping) {
@@ -41,9 +41,6 @@ void Player::move(float deltaTime) {
     }
     
     shape.move(velocityX, velocityY);
-    std::cout << shape.getPosition().x << ", " << shape.getPosition().y << std::endl;
+    //std::cout << shape.getPosition().x << ", " << shape.getPosition().y << std::endl;
 }
 
-void Player::checkCollisionWithGround(float groundY) {
-   
-}

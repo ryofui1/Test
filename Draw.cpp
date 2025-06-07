@@ -10,5 +10,15 @@ void Draw(sf::Time deltaTime) {
     for (auto& enemy : enemyList) {
         enemy.draw(deltaTime.asSeconds()*10);
     }
+
+    // 当たり判定計算したペアを線で描画
+    for (const auto& line : collisionLines) {
+        sf::Vertex vertices[2] = {
+            sf::Vertex(line.first, sf::Color::Magenta),
+            sf::Vertex(line.second, sf::Color::Magenta)
+        };
+        window.draw(vertices, 2, sf::Lines);
+    }
+
     window.display();
 }

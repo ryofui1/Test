@@ -26,5 +26,4 @@ public:
 
     Player();
     void move(float deltaTime);
-    void checkCollisionWithGround(float groundY);
 };

@@ -4,6 +4,7 @@
 #include "Player.hpp"
 #include "Enemy.hpp"
 #include <list>
+#include <vector>
 // 初期化内容(変数宣言,代入のみ) ↓
 
 // window関連
@@ -26,3 +27,5 @@ extern sf::RectangleShape ground;
 extern sf::Clock myClock;
 
 extern void defValue();
+
+extern std::vector<std::pair<sf::Vector2f, sf::Vector2f>> collisionLines;

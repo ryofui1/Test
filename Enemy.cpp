@@ -102,8 +102,8 @@ void Enemy::move(float deltaTime) {
     } else if (AItype == -1) {
         // 不動AI
     }
-    std::cout << "Enemy Position: " << shape.getPosition().x << ", " << shape.getPosition().y << std::endl;
-    std::cout << "Enemy Velocity: " << velocityX << ", " << velocityY << std::endl;
+    //std::cout << "Enemy Position: " << shape.getPosition().x << ", " << shape.getPosition().y << std::endl;
+    //std::cout << "Enemy Velocity: " << velocityX << ", " << velocityY << std::endl;
 }
 void Enemy::draw(float deltaTime) {
     window.draw(shape);
