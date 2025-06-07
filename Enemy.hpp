@@ -14,7 +14,17 @@ public:
     float sizeY ;
     float speed ; 
 
+    float velocityX; // X方向の速度
+    float velocityY; // Y方向の速度
+    float velocityDamping = 2.f; // 速度減衰の値
+
     Enemy(int enemyType);
     void move(float deltaTime);
     void draw(float deltaTime);
+    void velocitySet(float vx, float vy); // 速度を設定する
+    void velocityAdd(float vx, float vy); // 速度を加える
+    void velocityAccessible(float vx, float vy); // 速度を近づける    
+private:
+    sf::Vector2f velocity; // 速度を保持するための変数
+    bool isSpacePressed;
 };

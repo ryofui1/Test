@@ -17,7 +17,7 @@ sf::Clock myClock;
 sf::RenderWindow window(sf::VideoMode(ScreenWidth, ScreenHeight), "TestGame");
 Player player;
 sf::RectangleShape ground;
-std::list<Enemy> enemyList = {Enemy(0)};
+std::list<Enemy> enemyList = {Enemy(0), Enemy(0)};
 
 int main() {
     std::cout << "HelloWorld!" << std::endl;
