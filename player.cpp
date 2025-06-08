@@ -2,6 +2,7 @@
 #include "main.hpp"
 #include <iostream>
 
+// Player.cpp
 Player::Player() {
     shape.setSize(sf::Vector2f(width, height));
     shape.setFillColor(sf::Color::Black);
@@ -17,6 +18,7 @@ Player::Player() {
     sprite.setPosition(shape.getPosition());
     velocityY = 0.f;
     velocityX = 0.f;
+    knockbackResistance = 1.0f; // ノックバック耐性の初期値
 }
 
 void Player::move(float deltaTime) {
@@ -75,7 +77,7 @@ void Player::move(float deltaTime) {
     } else{
         velocityY = 0.f;
     }
-   
+
     if (velocityX < -velocityDamping) {
         velocityX += velocityDamping * deltaTime;
     } else if (velocityX > velocityDamping) {
