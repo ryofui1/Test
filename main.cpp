@@ -14,12 +14,16 @@ sf::Clock myClock;
 sf::RenderWindow window(sf::VideoMode(ScreenWidth, ScreenHeight), "TestGame");
 Player player;
 sf::RectangleShape ground;
+//isDebug
+bool isDebug = false;
 
 int main() {
     std::cout << "HelloWorld!" << std::endl;
     std::cout << "tybob8010&ryofui1" << std::endl;
+    std::cout << "If you want to debug, please press the B key." << std::endl;
 
     std::cout << ScreenWidth << std:: endl;
+
     
     defValue();
 
@@ -37,6 +41,7 @@ int main() {
 
         Draw(deltaTime);
     }
+
 
     return 0;
 }

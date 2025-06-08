@@ -20,4 +20,8 @@ extern sf::RectangleShape ground;
 // clock
 extern sf::Clock myClock;
 
+//isDebug
+extern bool isDebug;
+
+
 extern void defValue();

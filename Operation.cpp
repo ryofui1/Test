@@ -5,5 +5,4 @@
 
 void Operation(sf::Time deltaTime) {
     player.move(deltaTime.asSeconds()*10);
-    player.checkCollisionWithGround(groundY);
 }
