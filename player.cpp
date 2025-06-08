@@ -1,12 +1,14 @@
 #include "Player.hpp"
 #include <iostream>
 
+// Player.cpp
 Player::Player() {
     shape.setSize(sf::Vector2f(width, height));
     shape.setFillColor(sf::Color::Black);
     shape.setPosition(100.f, 300.f);
     velocityY = 0.f;
     velocityX = 0.f;
+    knockbackResistance = 1.0f; // ノックバック耐性の初期値
 }
 void Player::move(float deltaTime) {
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) || sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {

@@ -6,33 +6,37 @@
 #include <cmath>
 #include <random>
 
+// Enemy.cpp
 std::random_device rd;  // ハードウェア乱数生成器
 std::mt19937 mt(rd());   // メルセンヌ・ツイスタ法の生成器
 // 0から99までの一様分布の乱数を生成
 std::uniform_int_distribution<int> dist(10, 35);
 
 Enemy::Enemy(int enemyType) {
+    shape.setFillColor(sf::Color::Red);
+    shape.setPosition(0.f, 0.f);
+    knockbackResistance = 0.1f; // ノックバック耐性の初期値
     EnemyType = enemyType;
     if (EnemyType == 0) {
         sizeX = 50.f;
         sizeY = 50.f;
         speed = dist(mt);
         AItype = 1;
+        knockbackResistance = 0.1f;
     } else if (EnemyType == 1) {
         sizeX = 100.f;
         sizeY = 100.f;
         speed = 50.f;
         AItype = 2;
+        shape.setPosition(100.f,100.f);
     } else {
         sizeX = 0.f;
         sizeY = 0.f;
         speed = 0.f;
         AItype = -1;
     }
-    shape.setSize(sf::Vector2f(sizeX, sizeY));
-    shape.setFillColor(sf::Color::Red);
-    shape.setPosition(0.f, 0.f);
 
+    shape.setSize(sf::Vector2f(sizeX, sizeY));
     velocityX = 0.f; // X方向の初期速度
     velocityY = 0.f; // Y方向の初期速度
     

@@ -17,13 +17,14 @@ sf::Clock myClock;
 sf::RenderWindow window(sf::VideoMode(ScreenWidth, ScreenHeight), "TestGame");
 Player player;
 sf::RectangleShape ground;
-std::list<Enemy> enemyList = {Enemy(0), Enemy(0),Enemy(0), Enemy(0),};
 
+std::list<Enemy> enemyList = {Enemy(0),Enemy(0),Enemy(0),Enemy(0),};
+//Enemy(0), Enemy(0),Enemy(0), Enemy(0),
 int main() {
     std::cout << "HelloWorld!" << std::endl;
-    std::cout << "tybob8010&ryofui1" << std::endl;
+    std::cout << "tybob8010 & ryofui1" << std::endl;
 
-    std::cout << ScreenWidth << std:: endl;
+    //std::cout << ScreenWidth << std:: endl;
     
     defValue();
 
@@ -39,10 +40,11 @@ int main() {
             if (event.type == sf::Event::Closed)
                 window.close();
         }
-
+        //std::cout << "Operation" << std::endl;
         Operation(deltaTime);
-
+        //std::cout << "Draw" << std::endl;
         Draw(deltaTime);
+        //std::cout << "End of frame" << std::endl;
     }
 
     return 0;

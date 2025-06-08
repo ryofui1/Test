@@ -4,13 +4,16 @@
 #include "main.hpp"
 
 void Draw(sf::Time deltaTime) {
+    //std::cout << "Drawing frame" << std::endl;
     window.clear(sf::Color::Cyan);
     window.draw(ground);
     window.draw(player.shape);
+    //std::cout << "Drawing Enemy" << std::endl;
     for (auto& enemy : enemyList) {
         enemy.draw(deltaTime.asSeconds()*10);
     }
 
+    //std::cout << "Drawing collision lines" << std::endl;
     // 当たり判定計算したペアを線で描画
     for (const auto& line : collisionLines) {
         sf::Vertex vertices[2] = {

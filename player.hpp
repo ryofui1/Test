@@ -1,7 +1,8 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+#include "Collider.hpp"
 
-class Player {
+class Player : public Collider {
 public:
     sf::RectangleShape shape;
     //定数はここで宣言+定義,変数(計算に使う変わる数など)はここで宣言のみ 
@@ -26,4 +27,6 @@ public:
 
     Player();
     void move(float deltaTime);
+    sf::FloatRect getBounds() const override { return shape.getGlobalBounds(); }
+    void move(const sf::Vector2f& offset) override { shape.move(offset); }
 };

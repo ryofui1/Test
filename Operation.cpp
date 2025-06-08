@@ -5,16 +5,47 @@
 #include <cmath>
 #include <vector>
 #include <algorithm>
+#include "Collider.hpp"
+#include "Enemy.hpp"
+#include "player.hpp"
 
 // 空間分割用パラメータ
-const int gridCols = 8; // 横分割数
-const int gridRows = 6; // 縦分割数
-const float gridWidth = ScreenWidth;   // ゲーム画面の幅
-const float gridHeight = ScreenHeight; // ゲーム画面の高さ
+const int gridCols = 8;
+const int gridRows = 6;
+const float gridWidth = ScreenWidth;
+const float gridHeight = ScreenHeight;
 const float cellWidth = gridWidth / gridCols;
 const float cellHeight = gridHeight / gridRows;
 
 std::vector<std::pair<sf::Vector2f, sf::Vector2f>> collisionLines;
+
+// 汎用コライダー同士の当たり判定・位置補正
+void ResolveCollision(Collider& a, Collider& b) {
+    sf::FloatRect rect1 = a.getBounds();
+    sf::FloatRect rect2 = b.getBounds();
+    if (rect1.intersects(rect2)) {
+        sf::Vector2f center1(rect1.left + rect1.width / 2, rect1.top + rect1.height / 2);
+        sf::Vector2f center2(rect2.left + rect2.width / 2, rect2.top + rect2.height / 2);
+        sf::Vector2f dir = center1 - center2;
+        float len = std::sqrt(dir.x * dir.x + dir.y * dir.y);
+        if (len != 0) dir /= len;
+
+        float overlapX = std::min(rect1.left + rect1.width, rect2.left + rect2.width) - std::max(rect1.left, rect2.left);
+        float overlapY = std::min(rect1.top + rect1.height, rect2.top + rect2.height) - std::max(rect1.top, rect2.top);
+        float overlap = std::min(overlapX, overlapY);
+
+        // ノックバック耐性の比率で補正量を分配
+        float r1 = a.knockbackResistance;
+        float r2 = b.knockbackResistance;
+        float total = r1 + r2;
+        if (total <= 0.0001f) total = 1.0f; // 0除算防止
+
+        sf::Vector2f correctionA = dir * (overlap * (r2 / total));
+        sf::Vector2f correctionB = -dir * (overlap * (r1 / total));
+        a.move(correctionA);
+        b.move(correctionB);
+    }
+}
 
 void Operation(sf::Time deltaTime) {
     player.move(deltaTime.asSeconds()*10);
@@ -30,12 +61,12 @@ void Operation(sf::Time deltaTime) {
         int row = std::clamp(static_cast<int>(pos.y / cellHeight), 0, gridRows - 1);
         grid[col][row].push_back(&enemy);
     }
-    
+
     collisionLines.clear();
-    // 各セル内と隣接セルのエネミー同士で判定
+
+    // エネミー同士の当たり判定
     for (int col = 0; col < gridCols; ++col) {
         for (int row = 0; row < gridRows; ++row) {
-            // 対象セルと周囲8セル
             for (int dcol = -1; dcol <= 1; ++dcol) {
                 for (int drow = -1; drow <= 1; ++drow) {
                     int ncol = col + dcol;
@@ -45,37 +76,32 @@ void Operation(sf::Time deltaTime) {
                     auto& cell2 = grid[ncol][nrow];
                     for (size_t i = 0; i < cell1.size(); ++i) {
                         for (size_t j = 0; j < cell2.size(); ++j) {
-                            // 同じセル内はi<jのみ、異なるセルなら全組み合わせ
                             if (cell1[i] == cell2[j]) continue;
                             if (&cell1 == &cell2 && j <= i) continue;
-                            ResolveEnemyCollision(*cell1[i], *cell2[j]);
-                            sf::Vector2f c1 = cell1[i]->shape.getPosition() + sf::Vector2f(cell1[i]->sizeX/2, cell1[i]->sizeY/2);
-                            sf::Vector2f c2 = cell2[j]->shape.getPosition() + sf::Vector2f(cell2[j]->sizeX/2, cell2[j]->sizeY/2);
-                            collisionLines.emplace_back(c1, c2);
+                            sf::FloatRect rect1 = cell1[i]->getBounds();
+                            sf::FloatRect rect2 = cell2[j]->getBounds();
+                            if (rect1.intersects(rect2)) {
+                                sf::Vector2f c1(rect1.left + rect1.width / 2, rect1.top + rect1.height / 2);
+                                sf::Vector2f c2(rect2.left + rect2.width / 2, rect2.top + rect2.height / 2);
+                                collisionLines.emplace_back(c1, c2);
+                                ResolveCollision(*cell1[i], *cell2[j]);
+                            }
                         }
                     }
                 }
             }
         }
     }
-}
 
-void ResolveEnemyCollision(Enemy& e1, Enemy& e2) {
-    sf::FloatRect rect1 = e1.shape.getGlobalBounds();
-    sf::FloatRect rect2 = e2.shape.getGlobalBounds();
-    if (rect1.intersects(rect2)) {
-        sf::Vector2f center1 = e1.shape.getPosition() + sf::Vector2f(e1.sizeX/2, e1.sizeY/2);
-        sf::Vector2f center2 = e2.shape.getPosition() + sf::Vector2f(e2.sizeX/2, e2.sizeY/2);
-        sf::Vector2f dir = center1 - center2;
-        float len = std::sqrt(dir.x*dir.x + dir.y*dir.y);
-        if (len != 0) dir /= len; // 正規化
-
-        float overlapX = std::min(rect1.left + rect1.width, rect2.left + rect2.width) - std::max(rect1.left, rect2.left);
-        float overlapY = std::min(rect1.top + rect1.height, rect2.top + rect2.height) - std::max(rect1.top, rect2.top);
-        float overlap = std::min(overlapX, overlapY);
-
-        sf::Vector2f correction = dir * (overlap / 2.0f);
-        e1.shape.move(correction);
-        e2.shape.move(-correction);
+    // プレイヤーと各エネミーの当たり判定
+    for (auto& enemy : enemyList) {
+        sf::FloatRect rect1 = player.getBounds();
+        sf::FloatRect rect2 = enemy.getBounds();
+        if (rect1.intersects(rect2)) {
+            sf::Vector2f c1(rect1.left + rect1.width / 2, rect1.top + rect1.height / 2);
+            sf::Vector2f c2(rect2.left + rect2.width / 2, rect2.top + rect2.height / 2);
+            collisionLines.emplace_back(c1, c2);
+            ResolveCollision(player, enemy);
+        }
     }
 }

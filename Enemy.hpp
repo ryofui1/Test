@@ -1,7 +1,8 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+#include "Collider.hpp"
 
-class Enemy {
+class Enemy : public Collider {
 public:
     sf::RectangleShape shape;
     // 敵のタイプを数で指定
@@ -24,6 +25,8 @@ public:
     void velocitySet(float vx, float vy); // 速度を設定する
     void velocityAdd(float vx, float vy); // 速度を加える
     void velocityAccessible(float vx, float vy); // 速度を近づける    
+    sf::FloatRect getBounds() const override { return shape.getGlobalBounds(); }
+    void move(const sf::Vector2f& offset) override { shape.move(offset); }
 private:
     sf::Vector2f velocity; // 速度を保持するための変数
     bool isSpacePressed;
