@@ -7,20 +7,21 @@
 #include <random>
 
 // Enemy.cpp
-std::random_device rd;  // ハードウェア乱数生成器
-std::mt19937 mt(rd());   // メルセンヌ・ツイスタ法の生成器
-// 0から99までの一様分布の乱数を生成
-std::uniform_int_distribution<int> dist(10, 35);
+// std::random_device rd;  // ハードウェア乱数生成器
+// std::mt19937 mt(rd());   // メルセンヌ・ツイスタ法の生成器
+// // 0から99までの一様分布の乱数を生成
+// std::uniform_int_distribution<int> dist(10, 35);
 
 Enemy::Enemy(int enemyType) {
     shape.setFillColor(sf::Color::Red);
     shape.setPosition(0.f, 0.f);
     knockbackResistance = 0.1f; // ノックバック耐性の初期値
+    speed = 20.f;
     EnemyType = enemyType;
     if (EnemyType == 0) {
         sizeX = 50.f;
         sizeY = 50.f;
-        speed = dist(mt);
+        // speed = dist(mt);
         AItype = 1;
         knockbackResistance = 0.1f;
     } else if (EnemyType == 1) {
