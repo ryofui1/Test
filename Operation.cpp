@@ -49,8 +49,6 @@ void ResolveCollision(Collider& a, Collider& b) {
 
 void Operation(sf::Time deltaTime) {
     player.move(deltaTime.asSeconds()*10);
-<<<<<<< HEAD
-=======
     for (auto& enemy : enemyList) {
         enemy.move(deltaTime.asSeconds()*10);
     }
@@ -106,5 +104,4 @@ void Operation(sf::Time deltaTime) {
             ResolveCollision(player, enemy);
         }
     }
->>>>>>> 05dd983e89aec9df692753419e39bd8ca7b833c6
 }

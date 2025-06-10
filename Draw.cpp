@@ -7,9 +7,7 @@ void Draw(sf::Time deltaTime) {
     //std::cout << "Drawing frame" << std::endl;
     window.clear(sf::Color::Cyan);
     window.draw(ground);
-<<<<<<< HEAD
     player.draw(deltaTime.asSeconds()*10);
-=======
     window.draw(player.shape);
     //std::cout << "Drawing Enemy" << std::endl;
     for (auto& enemy : enemyList) {
@@ -26,6 +24,5 @@ void Draw(sf::Time deltaTime) {
         window.draw(vertices, 2, sf::Lines);
     }
 
->>>>>>> 05dd983e89aec9df692753419e39bd8ca7b833c6
     window.display();
 }
