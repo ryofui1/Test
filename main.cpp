@@ -21,7 +21,7 @@ sf::RectangleShape ground;
 bool isDebug = false;
 
 std::list<Enemy> enemyList = {Enemy(0),Enemy(0),Enemy(0),Enemy(0),};
-//Enemy(0), Enemy(0),Enemy(0), Enemy(0),
+//Enemy(0), Enemy(0),Enemy(0), Enemy(0)
 int main() {
     std::cout << "HelloWorld!" << std::endl;
     std::cout << "tybob8010&ryofui1" << std::endl;
@@ -45,11 +45,11 @@ int main() {
             if (event.type == sf::Event::Closed)
                 window.close();
         }
-        //std::cout << "Operation" << std::endl;
+        // std::cout << "Operation" << std::endl;
         Operation(deltaTime);
-        //std::cout << "Draw" << std::endl;
+        // std::cout << "Draw" << std::endl;
         Draw(deltaTime);
-        //std::cout << "End of frame" << std::endl;
+        // std::cout << "End of frame" << std::endl;
     }
 
 
