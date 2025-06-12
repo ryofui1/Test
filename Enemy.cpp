@@ -115,7 +115,7 @@ void Enemy::draw(float deltaTime) {
 
     // 速度ベクトルの大きさ
     float speedNorm = std::sqrt(velocityX * velocityX + velocityY * velocityY);
-    if (speedNorm > 1e-2f) { // 速度がほぼ0でなければ描画
+    if (speedNorm > 1e-4f) { // 速度がほぼ0でなければ描画
         // 矢印の長さ
         float arrowLength = 40.f;
         sf::Vector2f start = shape.getPosition() + sf::Vector2f(sizeX / 2, sizeY / 2);

@@ -1,4 +1,10 @@
 {
     "C_Cpp.errorSquiggles": "disabled",
-    "C_Cpp.default.compilerPath": "C:/msys64/mingw64/bin/gcc.exe"
+    "C_Cpp.default.compilerPath": "C:/msys64/mingw64/bin/gcc.exe",
+    "files.exclude": {
+        "**/*.o": true,
+        "**/*.obj": true,
+        "**/*.exe": true,
+        "**/.vscode": false
+    },
 }
