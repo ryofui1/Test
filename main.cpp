@@ -26,6 +26,7 @@ int main() {
     std::cout << "HelloWorld!" << std::endl;
     std::cout << "tybob8010&ryofui1" << std::endl;
     std::cout << "If you want to debug, please press the B key." << std::endl;
+    std::cout << "It's my world!" << std::endl;
 
     std::cout << ScreenWidth << std:: endl;
 
