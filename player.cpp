@@ -1,5 +1,6 @@
 #include "Player.hpp"
 #include "main.hpp"
+#include "Debug.hpp"
 #include <iostream>
 
 // Player.cpp
@@ -49,21 +50,8 @@ void Player::move(float deltaTime) {
     if (nowSPressed) shape.move(0.f, speedY * deltaTime);
 
     // isDebug時、押した瞬間だけ座標表示
-    if (isDebug) {
-        if (nowAPressed && !prevAPressed) {
-            std::cout << shape.getPosition().x << ", " << shape.getPosition().y << std::endl;
-        }
-        if (nowDPressed && !prevDPressed) {
-            std::cout << shape.getPosition().x << ", " << shape.getPosition().y << std::endl;
-        }
-        if (nowWPressed && !prevWPressed) {
-            std::cout << shape.getPosition().x << ", " << shape.getPosition().y << std::endl;
-        }
-        if (nowSPressed && !prevSPressed) {
-            std::cout << shape.getPosition().x << ", " << shape.getPosition().y << std::endl;
-        }
-    }
-
+    debugPrint("Player Position: " + std::to_string(shape.getPosition().x) + ", " + std::to_string(shape.getPosition().y));
+    
     prevAPressed = nowAPressed;
     prevDPressed = nowDPressed;
     prevWPressed = nowWPressed;

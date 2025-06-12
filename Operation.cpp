@@ -8,6 +8,7 @@
 #include "Collider.hpp"
 #include "Enemy.hpp"
 #include "player.hpp"
+#include "Debug.hpp"
 
 // 空間分割用パラメータ
 const int gridCols = 8;
@@ -104,4 +105,6 @@ void Operation(sf::Time deltaTime) {
             ResolveCollision(player, enemy);
         }
     }
+    // デバッグメッセージの表示
+    printDebugMessagesEverySecond(deltaTime.asSeconds());
 }
