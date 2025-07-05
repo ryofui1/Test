@@ -6,6 +6,8 @@
 #include "Draw.hpp"
 #include "Enemy.hpp"
 #include <list>
+#include <vector>
+
 
 void defValue() {
     ground.setSize(sf::Vector2f(ScreenWidth, ScreenHeight-groundY));
@@ -20,7 +22,11 @@ sf::RectangleShape ground;
 //isDebug
 bool isDebug = false;
 
-std::list<Enemy> enemyList = {Enemy(0),Enemy(0),Enemy(0),Enemy(0),};
+std::vector<Enemy> enemyList = {Enemy(0)};
+std::vector<Object> ObjectList_EnemyAttack = {};
+std::vector<Object> ObjectList_PlayerAttack = {};
+std::vector<Object> ObjectList_Other = {};
+
 //Enemy(0), Enemy(0),Enemy(0), Enemy(0)
 int main() {
     std::cout << "HelloWorld!" << std::endl;

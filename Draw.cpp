@@ -8,14 +8,24 @@ void Draw(sf::Time deltaTime) {
     window.clear(sf::Color::Cyan);
     window.draw(ground);
     // std::cout << "Drawing Player" << std::endl;
-    player.draw(deltaTime.asSeconds()*10);
+    player.draw(deltaTime.asSeconds());
 
     // std::cout << "Drawing PlayerShape" << std::endl;
     //window.draw(player.shape);
 
     // std::cout << "Drawing Enemy" << std::endl;
     for (auto& enemy : enemyList) {
-        enemy.draw(deltaTime.asSeconds()*10);
+        enemy.draw(deltaTime.asSeconds());
+    }
+
+    for (auto& object : ObjectList_EnemyAttack) {
+        object.draw(deltaTime.asSeconds());
+    }
+    for (auto& object : ObjectList_PlayerAttack) {
+        object.draw(deltaTime.asSeconds());
+    }
+    for (auto& object : ObjectList_Other) {
+        object.draw(deltaTime.asSeconds());
     }
 
     // std::cout << "Drawing collision lines" << std::endl;

@@ -2,6 +2,8 @@
 #include <SFML/Graphics.hpp>
 #include "Player.hpp"
 #include "main.hpp"
+#include "Debug.hpp"
+#include "Object.hpp"
 #include <iostream>
 #include <cmath>
 #include <random>
@@ -13,21 +15,27 @@
 // std::uniform_int_distribution<int> dist(10, 35);
 
 Enemy::Enemy(int enemyType) {
+    ColliderType = 1;
     shape.setFillColor(sf::Color::Red);
+    maxHp = 100;
+    hp = maxHp;
     shape.setPosition(0.f, 0.f);
     knockbackResistance = 0.1f; // ノックバック耐性の初期値
-    speed = 20.f;
+    speed = 200.f;
+
+    activeTime = 100;
+    phase = 0;
+
     EnemyType = enemyType;
     if (EnemyType == 0) {
         sizeX = 50.f;
         sizeY = 50.f;
-        // speed = dist(mt);
         AItype = 1;
         knockbackResistance = 0.1f;
     } else if (EnemyType == 1) {
         sizeX = 100.f;
         sizeY = 100.f;
-        speed = 50.f;
+        speed = 500.f;
         AItype = 2;
         shape.setPosition(100.f,100.f);
     } else {
@@ -64,34 +72,57 @@ void Enemy::velocityAdd(float vx, float vy) {
 }
 
 void Enemy::move(float deltaTime) {
+    activeTime += deltaTime;
+    debugPrint("Attack activeTime:" + std::to_string(activeTime));
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && !isSpacePressed) {
         velocityAdd(-velocityX*10, -velocityY*10); // スペースキーで反転
+        hp -= 10;
         isSpacePressed = true;
+        debugPrint("pushSpace");
     } else if (!sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
         isSpacePressed = false;
     }
 
-    if (velocityY < -velocityDamping) {
-        velocityY += velocityDamping ;
-    } else if (velocityY > velocityDamping) {
-        velocityY -= velocityDamping ;
+    if (velocityY < -velocityDamping * deltaTime) {
+        velocityY += velocityDamping * deltaTime ;
+    } else if (velocityY > velocityDamping * deltaTime) {
+        velocityY -= velocityDamping * deltaTime ;
     } else{
         velocityY = 0.f;
     }
-    if (velocityX < -velocityDamping) {
-        velocityX += velocityDamping;
-    } else if (velocityX > velocityDamping) {
-        velocityX -= velocityDamping;
+    if (velocityX < -velocityDamping * deltaTime) {
+        velocityX += velocityDamping * deltaTime;
+    } else if (velocityX > velocityDamping * deltaTime) {
+        velocityX -= velocityDamping * deltaTime;
     } else{
         velocityX = 0.f;
     }
     if (AItype == 1) {
         // 追跡AI
+        // ---移動----//
         sf::Vector2f playerPosition = player.shape.getPosition(); // プレイヤーの位置を取得
         sf::Vector2f direction = playerPosition - shape.getPosition();
         float length = std::sqrt(direction.x * direction.x + direction.y * direction.y);
-        if (length > 0) {
-            direction /= length;    // 正規化
+        direction /= length;   // 正規化
+        if (activeTime > 3) {
+            activeTime = 0;
+            // ---攻撃--- //
+            float angle = atan(direction.y/direction.x);
+            if (direction.x <= 0) {
+                angle += 3.1415;
+            } else if(direction.y > 0) {
+                angle += 6.283;
+            }
+            angle /= 6.28319;
+            angle *= 360;
+
+            ObjectList_EnemyAttack.push_back(Object(
+            1,0,shape.getPosition().x + 50.f*direction.x,
+            shape.getPosition().y + 50.f*direction.y,
+            angle,
+            10.f,1000.f));
+        }
+        if (length > 200) {
             sf::Vector2f newVelocity = direction * speed;
             float newSpeed = std::sqrt(newVelocity.x * newVelocity.x + newVelocity.y * newVelocity.y);
             float currentSpeed = std::sqrt(velocityX * velocityX + velocityY * velocityY);
@@ -99,19 +130,66 @@ void Enemy::move(float deltaTime) {
             // 新しい速度ベクトルの大きさが現状より大きい場合のみ上書き
             if (newSpeed > currentSpeed) {
                 velocitySet(newVelocity.x, newVelocity.y);
-            }
-            shape.move(velocityX*deltaTime,velocityY*deltaTime); // 速度100で移動
-        }
+            }}
+        // if (activeTime < 3) {
+        //     if (length > 200) {
+        //         sf::Vector2f newVelocity = direction * speed;
+        //         float newSpeed = std::sqrt(newVelocity.x * newVelocity.x + newVelocity.y * newVelocity.y);
+        //         float currentSpeed = std::sqrt(velocityX * velocityX + velocityY * velocityY);
+
+        //         // 新しい速度ベクトルの大きさが現状より大きい場合のみ上書き
+        //         if (newSpeed > currentSpeed) {
+        //             velocitySet(newVelocity.x, newVelocity.y);
+        //         }
+        //     }
+        // } else if (3 <= activeTime && activeTime < 3.5 )
+        
+        // if (length < 400) {
+        //     // ---攻撃--- //
+        //     float angle = atan(direction.y/direction.x);
+        //     if (direction.x <= 0) {
+        //         angle += 3.1415;
+        //     } else if(direction.y > 0) {
+        //         angle += 6.283;
+        //     }
+        //     angle /= 6.28319;
+        //     angle *= 360;
+
+        //     ObjectList_EnemyAttack.push_back(Object(
+        //     0,0,shape.getPosition().x + 50.f*direction.x,
+        //     shape.getPosition().y + 50.f+direction.y,
+        //     angle,
+        //     10.f,500.f));
+        // }
+        shape.move(velocityX*deltaTime,velocityY*deltaTime);
     } else if (AItype == 2) {
         // 傍観AI
     } else if (AItype == -1) {
         // 不動AI
     }
-    //std::cout << "Enemy Position: " << shape.getPosition().x << ", " << shape.getPosition().y << std::endl;
+    //std::cout<< "Enemy Position: " << shape.getPosition().x << ", " << shape.getPosition().y << std::endl;
     //std::cout << "Enemy Velocity: " << velocityX << ", " << velocityY << std::endl;
 }
 void Enemy::draw(float deltaTime) {
     window.draw(shape);
+
+    // --- HPバー描画 ---
+    float barWidth = sizeX;
+    float barHeight = 8.f;
+    float hpRatio = std::max(0.f, std::min(1.f, hp / static_cast<float>(maxHp)));
+    sf::Vector2f barPos = shape.getPosition() + sf::Vector2f(0, -barHeight - 4.f);
+
+    sf::RectangleShape backBar(sf::Vector2f(barWidth, barHeight));
+    backBar.setPosition(barPos);
+    backBar.setFillColor(sf::Color(80, 80, 80)); // グレー
+
+    sf::RectangleShape hpBar(sf::Vector2f(barWidth * hpRatio, barHeight));
+    hpBar.setPosition(barPos);
+    hpBar.setFillColor(sf::Color::Red);
+
+    window.draw(backBar);
+    window.draw(hpBar);
+    
 
     // 速度ベクトルの大きさ
     float speedNorm = std::sqrt(velocityX * velocityX + velocityY * velocityY);
@@ -141,4 +219,21 @@ void Enemy::draw(float deltaTime) {
         arrowHead.setFillColor(sf::Color::Yellow);
         window.draw(arrowHead);
     }
+}
+
+bool Enemy::isDisappear() {
+    if (hp <= 0) {
+        return(true);
+    } else {
+        return(false);
+    }
+}
+
+void Enemy::contactPlayerAttack(Object playerAttack) {
+    hp -= playerAttack.damage;
+    velocityAdd(
+        playerAttack.knockbackPower * cos(playerAttack.angle * 3.1415f / 180.f),
+        playerAttack.knockbackPower * sin(playerAttack.angle * 3.1415f / 180.f)
+    );
+    debugPrint("playerAttack!! hp:" + std::to_string(hp));
 }

@@ -3,6 +3,7 @@
 #include <iostream>
 #include "Player.hpp"
 #include "Enemy.hpp"
+#include "Object.hpp"
 #include <list>
 #include <vector>
 // 初期化内容(変数宣言,代入のみ) ↓
@@ -17,7 +18,12 @@ extern Player player;
 constexpr float groundY = 550.f;
 
 //Enemy関連
-extern std::list<Enemy> enemyList;
+extern std::vector<Enemy> enemyList;
+
+// Object関連
+extern std::vector<Object> ObjectList_EnemyAttack;
+extern std::vector<Object> ObjectList_PlayerAttack;
+extern std::vector<Object> ObjectList_Other;
 
 //地面
 extern sf::RectangleShape ground;
