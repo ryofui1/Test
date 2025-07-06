@@ -29,6 +29,12 @@ extern sf::Clock myClock;
 //isDebug
 extern bool isDebug;
 
+//タイル
+
+constexpr float TileSize = 40.f;
+constexpr int TileCols = static_cast<int>(ScreenWidth / TileSize);
+constexpr int TileRows = static_cast<int>(ScreenHeight / TileSize);
+
 
 extern void defValue();
 
