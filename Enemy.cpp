@@ -24,7 +24,7 @@ Enemy::Enemy(int enemyType) {
     speed = 200.f;
 
     activeTime = 100;
-    phase = 0;
+    State = EnemyState::Idle;
 
     EnemyType = enemyType;
     if (EnemyType == 0) {
@@ -99,76 +99,71 @@ void Enemy::move(float deltaTime) {
     }
     if (AItype == 1) {
         // 追跡AI
-        // ---移動----//
+
+        //Playerの方向directionを取得
         sf::Vector2f playerPosition = player.shape.getPosition(); // プレイヤーの位置を取得
         sf::Vector2f direction = playerPosition - shape.getPosition();
         float length = std::sqrt(direction.x * direction.x + direction.y * direction.y);
         direction /= length;   // 正規化
-        if (activeTime > 3) {
-            activeTime = 0;
-            // ---攻撃--- //
-            float angle = atan(direction.y/direction.x);
-            if (direction.x <= 0) {
-                angle += 3.1415;
-            } else if(direction.y > 0) {
-                angle += 6.283;
+
+        switch (State) {
+            // ---- Idle 待機状態 ---- // 
+            case EnemyState::Idle:{
+                if (activeTime > 2) {
+                    if (length < 300) {
+                        State = EnemyState::Attack0;
+                    } else {
+                        State = EnemyState::Walk;
+                    }
+                }
+            break;}
+            // ---- Attack0 攻撃状態 ---- //
+            case EnemyState::Attack0:{
+                float angle = atan(direction.y/direction.x);
+                if (direction.x <= 0) {
+                    angle += 3.1415;
+                } else if(direction.y > 0) {
+                    angle += 6.283;
+                }
+                angle /= 6.28319;
+                angle *= 360;
+
+                ObjectList_EnemyAttack.push_back(Object(
+                1,0,shape.getPosition().x,
+                shape.getPosition().y,
+                angle,
+                10.f,1000.f));
+
+                State = EnemyState::Idle;
+                activeTime = 0;
+            break;}
+            // ---- Walk 歩行状態 ---- //
+            case EnemyState::Walk:{
+                sf::Vector2f newVelocity = direction * speed;
+                float newSpeed = std::sqrt(newVelocity.x * newVelocity.x + newVelocity.y * newVelocity.y);
+                float currentSpeed = std::sqrt(velocityX * velocityX + velocityY * velocityY);
+
+                // 新しい速度ベクトルの大きさが現状より大きい場合のみ上書き
+                if (newSpeed > currentSpeed) {
+                    velocitySet(newVelocity.x, newVelocity.y);
+                }
+
+                // 近くなったら待機状態へ
+                if (length < 200) {
+                    State = EnemyState::Idle;
+                    activeTime = 0;
+                }
+            break;}
+            default:{
+                debugPrint("Any Enemy has FAILED State");
             }
-            angle /= 6.28319;
-            angle *= 360;
-
-            ObjectList_EnemyAttack.push_back(Object(
-            1,0,shape.getPosition().x + 50.f*direction.x,
-            shape.getPosition().y + 50.f*direction.y,
-            angle,
-            10.f,1000.f));
         }
-        if (length > 200) {
-            sf::Vector2f newVelocity = direction * speed;
-            float newSpeed = std::sqrt(newVelocity.x * newVelocity.x + newVelocity.y * newVelocity.y);
-            float currentSpeed = std::sqrt(velocityX * velocityX + velocityY * velocityY);
-
-            // 新しい速度ベクトルの大きさが現状より大きい場合のみ上書き
-            if (newSpeed > currentSpeed) {
-                velocitySet(newVelocity.x, newVelocity.y);
-            }}
-        // if (activeTime < 3) {
-        //     if (length > 200) {
-        //         sf::Vector2f newVelocity = direction * speed;
-        //         float newSpeed = std::sqrt(newVelocity.x * newVelocity.x + newVelocity.y * newVelocity.y);
-        //         float currentSpeed = std::sqrt(velocityX * velocityX + velocityY * velocityY);
-
-        //         // 新しい速度ベクトルの大きさが現状より大きい場合のみ上書き
-        //         if (newSpeed > currentSpeed) {
-        //             velocitySet(newVelocity.x, newVelocity.y);
-        //         }
-        //     }
-        // } else if (3 <= activeTime && activeTime < 3.5 )
-        
-        // if (length < 400) {
-        //     // ---攻撃--- //
-        //     float angle = atan(direction.y/direction.x);
-        //     if (direction.x <= 0) {
-        //         angle += 3.1415;
-        //     } else if(direction.y > 0) {
-        //         angle += 6.283;
-        //     }
-        //     angle /= 6.28319;
-        //     angle *= 360;
-
-        //     ObjectList_EnemyAttack.push_back(Object(
-        //     0,0,shape.getPosition().x + 50.f*direction.x,
-        //     shape.getPosition().y + 50.f+direction.y,
-        //     angle,
-        //     10.f,500.f));
-        // }
         shape.move(velocityX*deltaTime,velocityY*deltaTime);
     } else if (AItype == 2) {
         // 傍観AI
     } else if (AItype == -1) {
         // 不動AI
     }
-    //std::cout<< "Enemy Position: " << shape.getPosition().x << ", " << shape.getPosition().y << std::endl;
-    //std::cout << "Enemy Velocity: " << velocityX << ", " << velocityY << std::endl;
 }
 void Enemy::draw(float deltaTime) {
     window.draw(shape);

@@ -4,6 +4,14 @@
 #include "Object.hpp"
 #include <vector>
 
+enum class EnemyState {
+    Idle,
+    Attack0,
+    Attack1,
+    Escape,
+    Walk
+};
+
 
 class Enemy : public Collider {
 public:
@@ -21,10 +29,10 @@ public:
     float maxHp;
     float hp;
     bool isDisappear();
-    std::vector<std::vector<int>> timeTable; // 行動管理用 時間+内容
-    std::vector<bool> timeTableIsComplete; // 行動管理用 完了
     float activeTime; //行動管理用の時間
-    int phase; //行動の順序
+    EnemyState State; //行動の内容
+    
+
 
     float velocityX; // X方向の速度
     float velocityY; // Y方向の速度
