@@ -5,6 +5,7 @@
 #include "Operation.hpp"
 #include "Draw.hpp"
 #include "Enemy.hpp"
+#include "Debug.hpp"
 #include <list>
 #include <vector>
 
@@ -13,6 +14,7 @@ void defValue() {
     ground.setSize(sf::Vector2f(ScreenWidth, ScreenHeight-groundY));
     ground.setFillColor(sf::Color::Green);
     ground.setPosition(0.f, groundY);
+    enemyList.push_back(std::make_shared<Enemy>(EnemyTypes::TrackandArcher)); // 初期Enemy
 }
 
 sf::Clock myClock;
@@ -22,7 +24,8 @@ sf::RectangleShape ground;
 //isDebug
 bool isDebug = false;
 
-std::vector<Enemy> enemyList = {Enemy(0)};
+std::vector<std::shared_ptr<Enemy>> enemyList;
+
 std::vector<Object> ObjectList_EnemyAttack = {};
 std::vector<Object> ObjectList_PlayerAttack = {};
 std::vector<Object> ObjectList_Other = {};
@@ -35,10 +38,7 @@ int main() {
 
     std::cout << ScreenWidth << std:: endl;
 
-    //std::cout << ScreenWidth << std:: endl;
-    
     defValue();
-
     while (window.isOpen()) {
         //処理時間 deltatime
         sf::Time deltaTime = myClock.restart();

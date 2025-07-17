@@ -11,7 +11,7 @@ Player::Player() {
     shape.setFillColor(sf::Color::Black);
     shape.setPosition(100.f, 300.f);
 
-    if (!texture.loadFromFile("Test/photo/test/iconnew.png")) {
+    if (!texture.loadFromFile(PlayerPhoto)) {
         std::cout << "Error_FUZAKERUNA" << std::endl;
     } else {
         std::cout << "OK" << std::endl;

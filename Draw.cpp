@@ -15,7 +15,7 @@ void Draw(sf::Time deltaTime) {
 
     // std::cout << "Drawing Enemy" << std::endl;
     for (auto& enemy : enemyList) {
-        enemy.draw(deltaTime.asSeconds());
+        enemy->draw(deltaTime.asSeconds());
     }
 
     for (auto& object : ObjectList_EnemyAttack) {

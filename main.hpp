@@ -18,7 +18,7 @@ extern Player player;
 constexpr float groundY = 550.f;
 
 //Enemy関連
-extern std::vector<Enemy> enemyList;
+extern std::vector<std::shared_ptr<Enemy>> enemyList;
 
 // Object関連
 extern std::vector<Object> ObjectList_EnemyAttack;

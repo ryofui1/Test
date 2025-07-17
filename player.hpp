@@ -2,6 +2,10 @@
 #include <SFML/Graphics.hpp>
 #include "Collider.hpp"
 #include "Object.hpp"
+#include <iostream>
+#include <string>
+
+const std::string PlayerPhoto = "Test/photo/test/iconnew.png";
 
 class Player : public Collider {
 public:

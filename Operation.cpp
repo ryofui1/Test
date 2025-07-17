@@ -6,9 +6,10 @@
 #include <vector>
 #include <algorithm>
 #include "Collider.hpp"
-#include "Enemy.hpp"
+#include "enemy.hpp"
 #include "player.hpp"
 #include "Debug.hpp"
+#include <string>
 
 // 空間分割用パラメータ
 const int gridCols = 8;
@@ -50,11 +51,14 @@ void ResolveCollision(Collider& a, Collider& b) {
 
 void Operation(sf::Time deltaTime) {
     debugPrint("Player.move");
+    // print("player.move");
     player.move(deltaTime.asSeconds());
-    debugPrint("Enemy.move");
+    // print("enemy.move");
+    debugPrint("enemy->move");
     for (auto& enemy : enemyList) {
-        enemy.move(deltaTime.asSeconds());
+        enemy->move(deltaTime.asSeconds());
     }
+    // print("Object.move");
     debugPrint("Object.move");
     for (auto& object : ObjectList_PlayerAttack){
         object.move(deltaTime.asSeconds());
@@ -69,10 +73,10 @@ void Operation(sf::Time deltaTime) {
     // 空間分割グリッドの作成
     std::vector<std::vector<std::vector<Enemy*>>> grid(gridCols, std::vector<std::vector<Enemy*>>(gridRows));
     for (auto& enemy : enemyList) {
-        sf::Vector2f pos = enemy.shape.getPosition();
+        sf::Vector2f pos = enemy->shape.getPosition();
         int col = std::clamp(static_cast<int>(pos.x / cellWidth), 0, gridCols - 1);
         int row = std::clamp(static_cast<int>(pos.y / cellHeight), 0, gridRows - 1);
-        grid[col][row].push_back(&enemy);
+        grid[col][row].push_back(enemy.get());
     }
     // プレイヤーのグリッド座標を計算
     sf::Vector2f playerPos = player.shape.getPosition();
@@ -212,15 +216,23 @@ void Operation(sf::Time deltaTime) {
     }
 
 
-
+    // print("エネミー削除開始");
     for (auto it = enemyList.begin(); it != enemyList.end(); ) {
-        if (it->isDisappear()) {
-            it = enemyList.erase(it); // eraseの戻り値で次の要素を受け取る
+        Enemy* enemy = it->get();
+
+        if (enemy->isDisappear()) {
+            std::cout << "Erasing enemy" << std::endl;
+            print(std::to_string(enemyList.size()));
+            it = enemyList.erase(it); // erase のあと enemy は無効、使わない！
+            std::cout << "Enemy erased" << std::endl;
         } else {
             ++it;
         }
     }
 
+    // print("エネミー削除終了");
+
+    // print("playerAttack削除");
     // PlayerAttack
     for (auto it = ObjectList_PlayerAttack.begin(); it != ObjectList_PlayerAttack.end(); ) {
         if (it->isDestroy()) {
@@ -229,6 +241,8 @@ void Operation(sf::Time deltaTime) {
             ++it;
         }
     }
+
+    // print("enemyAttack削除");
 
     // EnemyAttack
     for (auto it = ObjectList_EnemyAttack.begin(); it != ObjectList_EnemyAttack.end(); ) {
